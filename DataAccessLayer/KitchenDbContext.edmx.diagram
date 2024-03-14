@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="ae3798dcd4534dd3933fe617817ba3c1" Name="Diagram1">
+        <EntityTypeShape EntityType="KitchenStoryDBModel.Cart" Width="1.5" PointX="3" PointY="2.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="KitchenStoryDBModel.Food" Width="1.5" PointX="0.75" PointY="8" IsExpanded="true" />
+        <EntityTypeShape EntityType="KitchenStoryDBModel.Order" Width="1.5" PointX="3" PointY="6" IsExpanded="true" />
+        <EntityTypeShape EntityType="KitchenStoryDBModel.User" Width="1.5" PointX="0.75" PointY="2.5" IsExpanded="true" />
+        <AssociationConnector Association="KitchenStoryDBModel.FK__Cart__FoodId__4F7CD00D" ManuallyRouted="false" />
+        <AssociationConnector Association="KitchenStoryDBModel.FK__Cart__UserId__4E88ABD4" ManuallyRouted="false" />
+        <AssociationConnector Association="KitchenStoryDBModel.FK__Order__UserId__52593CB8" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
