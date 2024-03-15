@@ -13,6 +13,6 @@ namespace BusinessLogicLayer
         public System.DateTime OrderDate { get; set; }
         public decimal TotalAmount { get; set; }
         public string PaymentMode { get; set; }
-
+        public string Status { get; set; }
     }
 }

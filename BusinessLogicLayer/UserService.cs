@@ -20,6 +20,8 @@ namespace BusinessLogicLayer
                 cfg.CreateMap<FoodDTO, Food>();
                 cfg.CreateMap<User, UserDTO>();
                 cfg.CreateMap<Cart, CartDTO>();
+                cfg.CreateMap<Order, PlaceOrderDTO>();
+                cfg.CreateMap<PlaceOrderDTO, Order>();
             });
             mapper = mapConfig.CreateMapper();
         }
@@ -116,7 +118,7 @@ namespace BusinessLogicLayer
 
             return $"{cartItem.FoodName} is removed from the cart.";
         }
-        public OrderDetailsDTO GetOrderDetails(int userId, PaymentMode paymentMode)
+        public OrderDetailsDTO GetOrderDetails(int userId)
         {
             DbSet<Cart> cartDb = db.Carts;
             DbSet<Food> foodDb = db.Foods;
@@ -150,15 +152,21 @@ namespace BusinessLogicLayer
             {
                 CartItems = cartItems,
                 TotalAmount = totalAmount,
-                UserDetails = userDetails,
-                PaymentMode = paymentMode
+                UserDetails = userDetails
             };
             return orderDetails;
         }
-        public void PlaceOrder(int userId, string paymentMode)
+        public int PlaceOrder(int userId, string paymentMode)
         {
-            List<Cart> cartItems = db.Carts.Where(c => c.UserId == userId).ToList();
+            DbSet<Cart> cartDb = db.Carts;
+            DbSet<Order> orderDb = db.Orders;
+            List<Cart> cartItems = cartDb.Where(c => c.UserId == userId).ToList();
             decimal totalAmount = cartItems.Sum(c => c.CartPrice);
+
+            if (totalAmount <= 0)
+            {
+                throw new ArgumentException("Your Order is Empty!.");
+            }
 
             Order newOrder = new Order
             {
@@ -167,12 +175,65 @@ namespace BusinessLogicLayer
                 TotalAmount = totalAmount,
                 PaymentMode = paymentMode
             };
-            db.Orders.Add(newOrder);
+            orderDb.Add(newOrder);
             db.SaveChanges();
 
-            // Clear the user's cart after placing the order
-            //db.Carts.RemoveRange(cartItems);
-            //db.SaveChanges();
+            cartDb.RemoveRange(cartItems);
+            db.SaveChanges();
+            return newOrder.Id;
+        }
+        public List<PlaceOrderDTO> GetUserOrderHistory(int userId)
+        {
+            List<Order> orders = db.Orders.Where(o => o.UserId == userId).ToList();
+            List<PlaceOrderDTO> orderHistory = new List<PlaceOrderDTO>();
+            foreach (var order in orders)
+            {
+                string status = (DateTime.Now.Date - order.OrderDate.Date).TotalDays >= 1 ? "Delivered" : "In Progress";
+                PlaceOrderDTO orderDTO = new PlaceOrderDTO
+                {
+                    Id = order.Id,
+                    UserId = order.UserId,
+                    TotalAmount = order.TotalAmount,
+                    PaymentMode = order.PaymentMode,
+                    OrderDate = order.OrderDate,
+                    Status = status
+                };
+                orderHistory.Add(orderDTO);
+            }
+            return orderHistory;
+        }
+        public PlaceOrderDTO GetOrderPlacedCondirmation(int orderId)
+        {
+            Order order = db.Orders.FirstOrDefault(o => o.Id == orderId);
+            if(order == null)
+            {
+                throw new Exception("Order not found");
+            }
+
+            PlaceOrderDTO orderConfirmation = new PlaceOrderDTO
+            {
+                Id = order.Id,
+                UserId = order.UserId,
+                TotalAmount = order.TotalAmount,
+                PaymentMode = order.PaymentMode,
+                OrderDate = order.OrderDate
+            };
+            return orderConfirmation;
+        }
+        public void CancelOrder(PlaceOrderDTO order)
+        {
+            Order existingOrder = db.Orders.FirstOrDefault(o => o.UserId == order.UserId && o.Id == order.Id);
+            if (existingOrder == null)
+            {
+                throw new ArgumentException("Order not found or you do not have permission to cancel this order.");
+            }
+
+            if (order.Status == "Delivered")
+            {
+                throw new InvalidOperationException("Cannot cancel a delivered order.");
+            }
+            db.Orders.Remove(existingOrder);
+            db.SaveChanges();
         }
     }
 }

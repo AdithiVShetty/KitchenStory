@@ -116,9 +116,9 @@ namespace KitchenStory.Controllers
 
         [HttpGet]
         [Route("api/user/{userId}/getorderdetails")]
-        public IHttpActionResult GetOrderDetails(int userId, [FromBody] PaymentMode paymentMode)
+        public IHttpActionResult GetOrderDetails(int userId)
         {
-            OrderDetailsDTO orderDetails = userBusiness.GetOrderDetails(userId, paymentMode);
+            OrderDetailsDTO orderDetails = userBusiness.GetOrderDetails(userId);
             return Ok(orderDetails);
         }
 
@@ -126,8 +126,53 @@ namespace KitchenStory.Controllers
         [Route("api/user/{userId}/placeorder")]
         public IHttpActionResult PlaceOrder(int userId, [FromBody] PlaceOrderDTO order)
         {
-            userBusiness.PlaceOrder(userId, order.PaymentMode);
-            return Ok($"Your Order has been placed successfully");
+            try
+            {
+                int orderId = userBusiness.PlaceOrder(userId, order.PaymentMode);
+                return Ok(orderId);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet]
+        [Route("api/user/{userId}/getorderhistory")]
+        public IHttpActionResult GetOrderHistory(int userId)
+        {
+            List<PlaceOrderDTO> orderHistory = userBusiness.GetUserOrderHistory(userId);
+            return Ok(orderHistory);
+        }
+
+        [HttpGet]
+        [Route("api/user/getplacedorderinfo/{orderId}")]
+        public IHttpActionResult GetPlacedOrderInfo(int orderId)
+        {
+            try
+            {
+                PlaceOrderDTO orderDTO = userBusiness.GetOrderPlacedCondirmation(orderId);
+                return Ok(orderDTO);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost]
+        [Route("api/user/cancelorder")]
+        public IHttpActionResult CancelOrder([FromBody] PlaceOrderDTO order)
+        {
+            try
+            {
+                userBusiness.CancelOrder(order);
+                return Ok("Order canceled successfully.");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }
