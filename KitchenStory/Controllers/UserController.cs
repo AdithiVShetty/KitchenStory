@@ -160,13 +160,13 @@ namespace KitchenStory.Controllers
             }
         }
 
-        [HttpPost]
-        [Route("api/user/cancelorder")]
-        public IHttpActionResult CancelOrder([FromBody] PlaceOrderDTO order)
+        [HttpDelete]
+        [Route("api/user/cancelorder/{orderId}")]
+        public IHttpActionResult CancelOrder(int orderId)
         {
             try
             {
-                userBusiness.CancelOrder(order);
+                userBusiness.CancelOrder(orderId);
                 return Ok("Order canceled successfully.");
             }
             catch (Exception ex)

@@ -220,19 +220,19 @@ namespace BusinessLogicLayer
             };
             return orderConfirmation;
         }
-        public void CancelOrder(PlaceOrderDTO order)
+        public void CancelOrder(int orderId)
         {
-            Order existingOrder = db.Orders.FirstOrDefault(o => o.UserId == order.UserId && o.Id == order.Id);
-            if (existingOrder == null)
+            Order order = db.Orders.FirstOrDefault(o => o.Id == orderId);
+            if (order == null)
             {
-                throw new ArgumentException("Order not found or you do not have permission to cancel this order.");
+                throw new Exception("Order not found or you do not have permission to cancel this order.");
             }
 
-            if (order.Status == "Delivered")
-            {
-                throw new InvalidOperationException("Cannot cancel a delivered order.");
-            }
-            db.Orders.Remove(existingOrder);
+            //if (order.Status == "Delivered")
+            //{
+            //    throw new InvalidOperationException("Cannot cancel a delivered order.");
+            //}
+            db.Orders.Remove(order);
             db.SaveChanges();
         }
     }
