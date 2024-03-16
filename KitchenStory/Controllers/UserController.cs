@@ -3,9 +3,6 @@ using BusinessLogicLayer;
 using KitchenStory.Models;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Cors;
 
@@ -151,7 +148,7 @@ namespace KitchenStory.Controllers
         {
             try
             {
-                PlaceOrderDTO orderDTO = userBusiness.GetOrderPlacedCondirmation(orderId);
+                PlaceOrderDTO orderDTO = userBusiness.GetOrderPlacedConfirmation(orderId);
                 return Ok(orderDTO);
             }
             catch (Exception ex)

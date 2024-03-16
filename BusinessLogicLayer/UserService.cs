@@ -202,7 +202,7 @@ namespace BusinessLogicLayer
             }
             return orderHistory;
         }
-        public PlaceOrderDTO GetOrderPlacedCondirmation(int orderId)
+        public PlaceOrderDTO GetOrderPlacedConfirmation(int orderId)
         {
             Order order = db.Orders.FirstOrDefault(o => o.Id == orderId);
             if(order == null)
