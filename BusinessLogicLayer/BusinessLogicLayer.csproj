@@ -81,8 +81,6 @@
     <Compile Include="CartItemDTO.cs" />
     <Compile Include="FoodDTO.cs" />
     <Compile Include="OrderDetailsDTO.cs" />
-    <Compile Include="PaymentIntentCreateDTO.cs" />
-    <Compile Include="PaymentService.cs" />
     <Compile Include="PlaceOrderDTO.cs" />
     <Compile Include="UpdateQuantityDTO.cs" />
     <Compile Include="UserDTO.cs" />

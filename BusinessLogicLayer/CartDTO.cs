@@ -1,6 +1,4 @@
-﻿using DataAccessLayer;
-
-namespace BusinessLogicLayer
+﻿namespace BusinessLogicLayer
 {
     public class CartDTO
     {
