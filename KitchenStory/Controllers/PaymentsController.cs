@@ -13,7 +13,7 @@ namespace KitchenStory.Controllers
         private readonly PaymentService _paymentService;
         public PaymentsController()
         {
-            _paymentService = new PaymentService("sk_test_51Ov10tSAYa0DjMU7i43WaYbgaasrT5d8mZyQFoOwKTtGvMbtUbSA7scPdMoMkYI2uVHaCFc0JUxJXsMmBIW0Qc1z00ZCBEnaR3");
+            _paymentService = new PaymentService("stripe-secret-key");
         }
 
         [HttpPost]
